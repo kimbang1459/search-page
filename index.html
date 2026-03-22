@@ -12,16 +12,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #111;
+      background: #f0f2f5;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     .container {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
       width: 100%;
-      max-width: 620px;
+      max-width: 640px;
       padding: 48px 28px;
     }
 
@@ -45,22 +45,22 @@
 
     .logo-naver   { background: #03c75a; color: #fff; font-size: 15px; }
     .logo-youtube { background: #ff0000; color: #fff; font-size: 11px; }
-    .logo-google  { background: #fff;    color: #4285f4; font-size: 15px; }
+    .logo-google  { background: #fff; color: #4285f4; font-size: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
 
     form {
       flex: 1;
       display: flex;
       align-items: center;
-      background: #1a1a1a;
+      background: #fff;
       border-radius: 12px;
-      border: 1px solid #272727;
+      border: 1px solid #e2e5e9;
       overflow: hidden;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
 
     form:focus-within {
-      border-color: #444;
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
+      border-color: #adb5bd;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
     }
 
     input {
@@ -69,11 +69,11 @@
       background: transparent;
       border: none;
       outline: none;
-      color: #e8e8e8;
+      color: #1a1a1a;
       font-size: 15px;
     }
 
-    input::placeholder { color: #444; }
+    input::placeholder { color: #adb5bd; }
 
     button {
       padding: 0 16px;
@@ -81,21 +81,21 @@
       background: transparent;
       border: none;
       cursor: pointer;
-      color: #444;
+      color: #adb5bd;
       font-size: 17px;
       transition: color 0.15s;
     }
 
-    button:hover { color: #aaa; }
+    button:hover { color: #555; }
 
     /* ── 구분선 ── */
     .divider {
       height: 1px;
-      background: #1e1e1e;
+      background: #e2e5e9;
       margin: 4px 0;
     }
 
-    /* ── 섹션 공통 ── */
+    /* ── 섹션 ── */
     .section {
       display: flex;
       flex-direction: column;
@@ -111,49 +111,50 @@
 
     .section-label {
       font-size: 11px;
-      font-weight: 500;
-      color: #3a3a3a;
+      font-weight: 600;
+      color: #adb5bd;
       letter-spacing: 0.8px;
       text-transform: uppercase;
     }
 
     .updated {
       font-size: 10px;
-      color: #2e2e2e;
+      color: #ced4da;
     }
 
-    /* ── 지수 그리드 ── */
+    /* ── 그리드 ── */
     .market-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
     }
 
-    /* ── 종목 그리드 ── */
     .stock-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
     }
 
-    /* ── 카드 공통 ── */
+    /* ── 카드 ── */
     .card {
-      background: #161616;
-      border: 1px solid #222;
+      background: #fff;
+      border: 1px solid #e8eaed;
       border-radius: 10px;
       padding: 11px 12px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      transition: border-color 0.15s;
+      gap: 3px;
+      transition: box-shadow 0.15s;
       min-width: 0;
     }
 
-    .card:hover { border-color: #333; }
+    .card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
 
     .card-name {
       font-size: 10px;
-      color: #555;
+      color: #868e96;
       font-weight: 500;
       white-space: nowrap;
       overflow: hidden;
@@ -162,29 +163,30 @@
 
     .card-ticker {
       font-size: 9px;
-      color: #333;
+      color: #ced4da;
     }
 
     .card-value {
       font-size: 13px;
-      font-weight: 600;
-      color: #ccc;
+      font-weight: 700;
+      color: #212529;
       letter-spacing: -0.3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin-top: 2px;
     }
 
     .card-change {
       font-size: 10px;
-      font-weight: 500;
+      font-weight: 600;
       white-space: nowrap;
     }
 
-    .loading { color: #2e2e2e; }
-    .up      { color: #ef4444; }
-    .down    { color: #3b82f6; }
-    .flat    { color: #555; }
+    .loading { color: #dee2e6; }
+    .up      { color: #e03131; }
+    .down    { color: #1971c2; }
+    .flat    { color: #868e96; }
   </style>
 </head>
 <body>
@@ -240,7 +242,6 @@
   </div>
 
   <script>
-    // ── 시장 지수 ──────────────────────────────────────────────
     const INDICES = [
       { id: 'kospi',  symbol: '%5EKS11', label: 'KOSPI'   },
       { id: 'kosdaq', symbol: '%5EKQ11', label: 'KOSDAQ'  },
@@ -248,7 +249,6 @@
       { id: 'nasdaq', symbol: '%5EIXIC', label: 'NASDAQ'  },
     ];
 
-    // ── 내 종목 (한국: 코드만, 미국: 티커) ─────────────────────
     const MY_STOCKS = [
       { code: '457480', kr: true  },
       { code: '192820', kr: true  },
@@ -262,7 +262,6 @@
       { code: '458730', kr: true  },
     ];
 
-    // ── 유틸 ───────────────────────────────────────────────────
     function fmt(n, digits = 2) {
       if (n == null) return '—';
       return n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
@@ -273,12 +272,24 @@
     }
 
     async function fetchQuote(symbol) {
-      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const json = await res.json();
-      const result = json.chart.result;
-      if (!result) throw new Error('no result');
+      const target = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
+      const proxy  = `https://corsproxy.io/?${encodeURIComponent(target)}`;
+
+      let json;
+      try {
+        // 직접 시도
+        const res = await fetch(target);
+        if (!res.ok) throw new Error();
+        json = await res.json();
+      } catch {
+        // CORS 프록시 경유
+        const res = await fetch(proxy);
+        if (!res.ok) throw new Error('proxy failed');
+        json = await res.json();
+      }
+
+      const result = json?.chart?.result;
+      if (!result?.[0]) throw new Error('no data');
       const meta = result[0].meta;
       return {
         name:  meta.shortName || meta.symbol,
@@ -287,18 +298,15 @@
       };
     }
 
-    function changeClass(diff) {
-      return diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
-    }
+    function cls(diff) { return diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat'; }
 
-    // ── 지수 카드 렌더 ─────────────────────────────────────────
+    // ── 지수 카드
     function renderMarketCards() {
-      const grid = document.getElementById('market-grid');
-      grid.innerHTML = INDICES.map(({ id, label }) => `
+      document.getElementById('market-grid').innerHTML = INDICES.map(({ id, label }) => `
         <div class="card">
           <span class="card-name">${label}</span>
           <span class="card-value loading" id="mv-${id}">···</span>
-          <span class="card-change" id="mc-${id}"></span>
+          <span class="card-change loading" id="mc-${id}">···</span>
         </div>`).join('');
     }
 
@@ -306,34 +314,31 @@
       await Promise.all(INDICES.map(async ({ id, symbol }) => {
         try {
           const { price, prev } = await fetchQuote(symbol);
-          const diff = price - prev;
-          const pct  = diff / prev * 100;
-          const sign = diff >= 0 ? '+' : '';
+          const diff = price - prev, pct = diff / prev * 100, sign = diff >= 0 ? '+' : '';
           document.getElementById(`mv-${id}`).textContent = fmt(price);
-          document.getElementById(`mv-${id}`).classList.remove('loading');
+          document.getElementById(`mv-${id}`).className = 'card-value';
           document.getElementById(`mc-${id}`).textContent = `${sign}${fmt(diff)} (${sign}${pct.toFixed(2)}%)`;
-          document.getElementById(`mc-${id}`).className = `card-change ${changeClass(diff)}`;
+          document.getElementById(`mc-${id}`).className = `card-change ${cls(diff)}`;
         } catch {
           document.getElementById(`mv-${id}`).textContent = '—';
+          document.getElementById(`mc-${id}`).textContent = '';
         }
       }));
       document.getElementById('updated-market').textContent = nowTime() + ' 기준';
     }
 
-    // ── 종목 카드 렌더 ─────────────────────────────────────────
+    // ── 종목 카드
     function renderStockCards() {
-      const grid = document.getElementById('stock-grid');
-      grid.innerHTML = MY_STOCKS.map(({ code }) => `
+      document.getElementById('stock-grid').innerHTML = MY_STOCKS.map(({ code }) => `
         <div class="card">
           <span class="card-name loading" id="sn-${code}">···</span>
           <span class="card-ticker">${code}</span>
           <span class="card-value loading" id="sv-${code}">···</span>
-          <span class="card-change" id="sc-${code}"></span>
+          <span class="card-change loading" id="sc-${code}">···</span>
         </div>`).join('');
     }
 
     async function loadStock({ code, kr }) {
-      // 한국 주식: .KS 먼저 시도, 실패 시 .KQ
       const symbols = kr ? [`${code}.KS`, `${code}.KQ`] : [code];
       let data = null;
       for (const sym of symbols) {
@@ -342,20 +347,19 @@
       if (!data) {
         document.getElementById(`sn-${code}`).textContent = code;
         document.getElementById(`sv-${code}`).textContent = '—';
+        document.getElementById(`sc-${code}`).textContent = '';
         return;
       }
       const { name, price, prev } = data;
-      const diff = price - prev;
-      const pct  = diff / prev * 100;
-      const sign = diff >= 0 ? '+' : '';
-      const digits = price >= 100 ? 0 : 2;
+      const diff = price - prev, pct = diff / prev * 100, sign = diff >= 0 ? '+' : '';
+      const digits = price >= 1000 ? 0 : price >= 10 ? 2 : 3;
 
       document.getElementById(`sn-${code}`).textContent = name;
-      document.getElementById(`sn-${code}`).classList.remove('loading');
+      document.getElementById(`sn-${code}`).className = 'card-name';
       document.getElementById(`sv-${code}`).textContent = fmt(price, digits);
-      document.getElementById(`sv-${code}`).classList.remove('loading');
+      document.getElementById(`sv-${code}`).className = 'card-value';
       document.getElementById(`sc-${code}`).textContent = `${sign}${pct.toFixed(2)}%`;
-      document.getElementById(`sc-${code}`).className = `card-change ${changeClass(diff)}`;
+      document.getElementById(`sc-${code}`).className = `card-change ${cls(diff)}`;
     }
 
     async function loadStocks() {
@@ -363,7 +367,6 @@
       document.getElementById('updated-stocks').textContent = nowTime() + ' 기준';
     }
 
-    // ── 초기화 & 주기 갱신 ────────────────────────────────────
     renderMarketCards();
     renderStockCards();
     loadMarket();
