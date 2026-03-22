@@ -50,21 +50,11 @@
       flex: 1;
       display: flex;
       align-items: center;
-      background: #fff;
-      border-radius: 12px;
-      border: 1px solid #e2e5e9;
       overflow: hidden;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-
-    form:focus-within {
-      border-color: #adb5bd;
-      box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
     }
 
     input {
       flex: 1;
-      padding: 13px 16px;
       background: transparent;
       border: none;
       outline: none;
@@ -72,20 +62,104 @@
       font-size: 15px;
     }
 
-    input::placeholder { color: #adb5bd; }
+    /* ── 네이버 스타일 ── */
+    .form-naver {
+      background: #fff;
+      border: 2px solid #03c75a;
+      border-radius: 4px;
+      transition: box-shadow 0.15s;
+    }
+    .form-naver:focus-within {
+      box-shadow: 0 0 0 3px rgba(3,199,90,0.15);
+    }
+    .form-naver input {
+      padding: 11px 14px;
+    }
+    .form-naver input::placeholder { color: #bbb; }
+    .btn-naver {
+      padding: 0 18px;
+      height: 100%;
+      background: #03c75a;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+      flex-shrink: 0;
+      align-self: stretch;
+    }
+    .btn-naver:hover { background: #02b350; }
 
-    button {
-      padding: 0 16px;
+    /* ── 유튜브 스타일 ── */
+    .form-youtube {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 24px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+      transition: box-shadow 0.15s;
+    }
+    .form-youtube:focus-within {
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.08), 0 0 0 3px rgba(0,0,0,0.06);
+    }
+    .form-youtube input {
+      padding: 11px 20px;
+      border-radius: 24px 0 0 24px;
+    }
+    .form-youtube input::placeholder { color: #aaa; }
+    .btn-youtube {
+      padding: 0 18px;
+      height: 100%;
+      background: #f8f8f8;
+      border: none;
+      border-left: 1px solid #ccc;
+      border-radius: 0 24px 24px 0;
+      cursor: pointer;
+      color: #555;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      align-self: stretch;
+      transition: background 0.15s;
+    }
+    .btn-youtube:hover { background: #eee; }
+
+    /* ── 구글 스타일 ── */
+    .form-google {
+      background: #fff;
+      border: 1px solid #dfe1e5;
+      border-radius: 24px;
+      box-shadow: 0 1px 6px rgba(32,33,36,0.1);
+      transition: box-shadow 0.15s;
+    }
+    .form-google:focus-within {
+      box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+      border-color: rgba(223,225,229,0);
+    }
+    .form-google input {
+      padding: 11px 20px;
+    }
+    .form-google input::placeholder { color: #aaa; }
+    .btn-google {
+      padding: 0 18px;
       height: 100%;
       background: transparent;
       border: none;
       cursor: pointer;
-      color: #adb5bd;
-      font-size: 17px;
+      color: #aaa;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      align-self: stretch;
       transition: color 0.15s;
     }
-
-    button:hover { color: #555; }
+    .btn-google:hover { color: #555; }
 
     .divider {
       height: 1px;
@@ -232,25 +306,31 @@
 
     <div class="search-row">
       <div class="logo logo-naver">N</div>
-      <form action="https://search.naver.com/search.naver" method="get" target="_blank">
-        <input name="query" type="text" placeholder="네이버 검색" autofocus>
-        <button type="submit">↵</button>
+      <form class="form-naver" action="https://search.naver.com/search.naver" method="get" target="_blank">
+        <input name="query" type="text" placeholder="네이버를 검색해 보세요." autofocus>
+        <button class="btn-naver" type="submit">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="white" stroke-width="1.8"/><line x1="10" y1="10" x2="14" y2="14" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
       </form>
     </div>
 
     <div class="search-row">
       <div class="logo logo-youtube">▶</div>
-      <form action="https://www.youtube.com/results" method="get" target="_blank">
-        <input name="search_query" type="text" placeholder="YouTube 검색">
-        <button type="submit">↵</button>
+      <form class="form-youtube" action="https://www.youtube.com/results" method="get" target="_blank">
+        <input name="search_query" type="text" placeholder="검색">
+        <button class="btn-youtube" type="submit">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5" stroke="#555" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="#555" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
       </form>
     </div>
 
     <div class="search-row">
       <div class="logo logo-google">G</div>
-      <form action="https://www.google.com/search" method="get" target="_blank">
+      <form class="form-google" action="https://www.google.com/search" method="get" target="_blank">
         <input name="q" type="text" placeholder="Google 검색">
-        <button type="submit">↵</button>
+        <button class="btn-google" type="submit">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5" stroke="#aaa" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="#aaa" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
       </form>
     </div>
 
