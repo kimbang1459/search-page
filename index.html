@@ -12,19 +12,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #0f0f0f;
+      background: #111;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     .container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 14px;
       width: 100%;
-      max-width: 560px;
-      padding: 40px 24px;
+      max-width: 600px;
+      padding: 48px 28px;
     }
 
+    /* ── 검색 행 ── */
     .search-row {
       display: flex;
       align-items: center;
@@ -32,87 +33,234 @@
     }
 
     .logo {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      font-weight: 700;
-      border-radius: 8px;
+      font-weight: 800;
+      border-radius: 10px;
+      letter-spacing: -0.5px;
     }
 
-    .logo-naver { background: #03c75a; color: white; font-size: 14px; }
-    .logo-youtube { background: #ff0000; color: white; font-size: 10px; }
-    .logo-google { background: #fff; color: #4285f4; font-size: 14px; }
+    .logo-naver   { background: #03c75a; color: #fff; font-size: 15px; }
+    .logo-youtube { background: #ff0000; color: #fff; font-size: 11px; }
+    .logo-google  { background: #fff;    color: #4285f4; font-size: 15px; }
 
     form {
       flex: 1;
       display: flex;
-      background: #1e1e1e;
+      align-items: center;
+      background: #1a1a1a;
       border-radius: 12px;
-      border: 1px solid #2e2e2e;
+      border: 1px solid #272727;
       overflow: hidden;
-      transition: border-color 0.2s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
     form:focus-within {
-      border-color: #555;
+      border-color: #444;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
     }
 
     input {
       flex: 1;
-      padding: 12px 16px;
+      padding: 13px 16px;
       background: transparent;
       border: none;
       outline: none;
-      color: #e0e0e0;
+      color: #e8e8e8;
       font-size: 15px;
+      letter-spacing: -0.2px;
     }
 
-    input::placeholder { color: #555; }
+    input::placeholder { color: #444; }
 
     button {
       padding: 0 16px;
+      height: 100%;
       background: transparent;
       border: none;
       cursor: pointer;
-      color: #666;
-      font-size: 16px;
-      transition: color 0.2s;
+      color: #444;
+      font-size: 17px;
+      transition: color 0.15s;
     }
 
-    button:hover { color: #ccc; }
+    button:hover { color: #aaa; }
+
+    /* ── 구분선 ── */
+    .divider {
+      height: 1px;
+      background: #1e1e1e;
+      margin: 6px 0;
+    }
+
+    /* ── 지표 섹션 ── */
+    .market-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-left: 50px; /* logo 너비(38) + gap(12) */
+    }
+
+    .market-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #3a3a3a;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .market-card {
+      background: #161616;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 11px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      transition: border-color 0.15s;
+    }
+
+    .market-card:hover { border-color: #333; }
+
+    .market-name {
+      font-size: 11px;
+      color: #555;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .market-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ccc;
+      letter-spacing: -0.3px;
+    }
+
+    .market-change {
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .up   { color: #ef4444; }  /* 한국식: 상승=빨강 */
+    .down { color: #3b82f6; }  /* 한국식: 하락=파랑 */
+    .flat { color: #555; }
+
+    .market-loading {
+      font-size: 12px;
+      color: #333;
+    }
+
+    /* ── 업데이트 시각 ── */
+    .market-updated {
+      font-size: 10px;
+      color: #2e2e2e;
+      text-align: right;
+      padding-right: 2px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
 
+    <!-- 네이버 -->
     <div class="search-row">
       <div class="logo logo-naver">N</div>
       <form action="https://search.naver.com/search.naver" method="get" target="_blank">
         <input name="query" type="text" placeholder="네이버 검색" autofocus>
-        <button type="submit">→</button>
+        <button type="submit">↵</button>
       </form>
     </div>
 
+    <!-- 경제 지표 -->
+    <div class="market-section">
+      <div class="market-label">Market</div>
+      <div class="market-grid" id="market-grid">
+        <div class="market-card"><span class="market-name">KOSPI</span><span class="market-value market-loading" id="v-kospi">···</span><span class="market-change" id="c-kospi"></span></div>
+        <div class="market-card"><span class="market-name">KOSDAQ</span><span class="market-value market-loading" id="v-kosdaq">···</span><span class="market-change" id="c-kosdaq"></span></div>
+        <div class="market-card"><span class="market-name">S&amp;P 500</span><span class="market-value market-loading" id="v-sp500">···</span><span class="market-change" id="c-sp500"></span></div>
+        <div class="market-card"><span class="market-name">NASDAQ</span><span class="market-value market-loading" id="v-nasdaq">···</span><span class="market-change" id="c-nasdaq"></span></div>
+      </div>
+      <div class="market-updated" id="market-updated"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 유튜브 -->
     <div class="search-row">
       <div class="logo logo-youtube">▶</div>
       <form action="https://www.youtube.com/results" method="get" target="_blank">
         <input name="search_query" type="text" placeholder="YouTube 검색">
-        <button type="submit">→</button>
+        <button type="submit">↵</button>
       </form>
     </div>
 
+    <!-- 구글 -->
     <div class="search-row">
       <div class="logo logo-google">G</div>
       <form action="https://www.google.com/search" method="get" target="_blank">
         <input name="q" type="text" placeholder="Google 검색">
-        <button type="submit">→</button>
+        <button type="submit">↵</button>
       </form>
     </div>
 
   </div>
+
+  <script>
+    const INDICES = [
+      { id: 'kospi',  symbol: '%5EKS11',  label: 'KOSPI'   },
+      { id: 'kosdaq', symbol: '%5EKQ11',  label: 'KOSDAQ'  },
+      { id: 'sp500',  symbol: '%5EGSPC',  label: 'S&P 500' },
+      { id: 'nasdaq', symbol: '%5EIXIC',  label: 'NASDAQ'  },
+    ];
+
+    function fmt(n) {
+      if (n === null || n === undefined) return '—';
+      return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    async function fetchOne(symbol) {
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
+      const res = await fetch(url);
+      const json = await res.json();
+      const meta = json.chart.result[0].meta;
+      const price = meta.regularMarketPrice;
+      const prev  = meta.chartPreviousClose;
+      const diff  = price - prev;
+      const pct   = (diff / prev) * 100;
+      return { price, diff, pct };
+    }
+
+    async function loadMarket() {
+      await Promise.all(INDICES.map(async ({ id, symbol }) => {
+        try {
+          const { price, diff, pct } = await fetchOne(symbol);
+          document.getElementById(`v-${id}`).textContent = fmt(price);
+          document.getElementById(`v-${id}`).classList.remove('market-loading');
+          const sign = diff >= 0 ? '+' : '';
+          const cls  = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+          document.getElementById(`c-${id}`).textContent = `${sign}${fmt(diff)} (${sign}${pct.toFixed(2)}%)`;
+          document.getElementById(`c-${id}`).className = `market-change ${cls}`;
+        } catch {
+          document.getElementById(`v-${id}`).textContent = '—';
+        }
+      }));
+      const now = new Date();
+      document.getElementById('market-updated').textContent =
+        `updated ${now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    loadMarket();
+    setInterval(loadMarket, 60000); // 1분마다 갱신
+  </script>
 </body>
 </html>
