@@ -301,6 +301,9 @@
 
     function cls(diff) { return diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat'; }
 
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const naverStockUrl = isMobile ? 'https://m.stock.naver.com' : 'https://stock.naver.com';
+
     function renderMarketCards() {
       const cards = INDICES.map(({ id, label }) => `
         <div class="card">
@@ -310,7 +313,7 @@
         </div>`).join('');
 
       const linkCard = `
-        <a href="https://stock.naver.com" target="_blank" class="card card-link">
+        <a href="${naverStockUrl}" target="_blank" class="card card-link">
           <span class="card-name">네이버 증권</span>
           <span class="card-value" style="color:#03c75a;">N</span>
           <span class="card-change" style="color:#868e96;">바로가기 →</span>
