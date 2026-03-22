@@ -21,7 +21,7 @@
       flex-direction: column;
       gap: 14px;
       width: 100%;
-      max-width: 600px;
+      max-width: 620px;
       padding: 48px 28px;
     }
 
@@ -41,7 +41,6 @@
       justify-content: center;
       font-weight: 800;
       border-radius: 10px;
-      letter-spacing: -0.5px;
     }
 
     .logo-naver   { background: #03c75a; color: #fff; font-size: 15px; }
@@ -72,7 +71,6 @@
       outline: none;
       color: #e8e8e8;
       font-size: 15px;
-      letter-spacing: -0.2px;
     }
 
     input::placeholder { color: #444; }
@@ -94,18 +92,24 @@
     .divider {
       height: 1px;
       background: #1e1e1e;
-      margin: 6px 0;
+      margin: 4px 0;
     }
 
-    /* ── 지표 섹션 ── */
-    .market-section {
+    /* ── 섹션 공통 ── */
+    .section {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding-left: 50px; /* logo 너비(38) + gap(12) */
+      padding-left: 50px;
     }
 
-    .market-label {
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-label {
       font-size: 11px;
       font-weight: 500;
       color: #3a3a3a;
@@ -113,60 +117,74 @@
       text-transform: uppercase;
     }
 
+    .updated {
+      font-size: 10px;
+      color: #2e2e2e;
+    }
+
+    /* ── 지수 그리드 ── */
     .market-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
     }
 
-    .market-card {
+    /* ── 종목 그리드 ── */
+    .stock-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    /* ── 카드 공통 ── */
+    .card {
       background: #161616;
       border: 1px solid #222;
       border-radius: 10px;
       padding: 11px 12px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
       transition: border-color 0.15s;
+      min-width: 0;
     }
 
-    .market-card:hover { border-color: #333; }
+    .card:hover { border-color: #333; }
 
-    .market-name {
-      font-size: 11px;
+    .card-name {
+      font-size: 10px;
       color: #555;
       font-weight: 500;
-      letter-spacing: 0.3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .market-value {
-      font-size: 14px;
-      font-weight: 600;
-      color: #ccc;
-      letter-spacing: -0.3px;
-    }
-
-    .market-change {
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    .up   { color: #ef4444; }  /* 한국식: 상승=빨강 */
-    .down { color: #3b82f6; }  /* 한국식: 하락=파랑 */
-    .flat { color: #555; }
-
-    .market-loading {
-      font-size: 12px;
+    .card-ticker {
+      font-size: 9px;
       color: #333;
     }
 
-    /* ── 업데이트 시각 ── */
-    .market-updated {
-      font-size: 10px;
-      color: #2e2e2e;
-      text-align: right;
-      padding-right: 2px;
+    .card-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ccc;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
+
+    .card-change {
+      font-size: 10px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .loading { color: #2e2e2e; }
+    .up      { color: #ef4444; }
+    .down    { color: #3b82f6; }
+    .flat    { color: #555; }
   </style>
 </head>
 <body>
@@ -181,16 +199,22 @@
       </form>
     </div>
 
-    <!-- 경제 지표 -->
-    <div class="market-section">
-      <div class="market-label">Market</div>
-      <div class="market-grid" id="market-grid">
-        <div class="market-card"><span class="market-name">KOSPI</span><span class="market-value market-loading" id="v-kospi">···</span><span class="market-change" id="c-kospi"></span></div>
-        <div class="market-card"><span class="market-name">KOSDAQ</span><span class="market-value market-loading" id="v-kosdaq">···</span><span class="market-change" id="c-kosdaq"></span></div>
-        <div class="market-card"><span class="market-name">S&amp;P 500</span><span class="market-value market-loading" id="v-sp500">···</span><span class="market-change" id="c-sp500"></span></div>
-        <div class="market-card"><span class="market-name">NASDAQ</span><span class="market-value market-loading" id="v-nasdaq">···</span><span class="market-change" id="c-nasdaq"></span></div>
+    <!-- 시장 지수 -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Market</span>
+        <span class="updated" id="updated-market"></span>
       </div>
-      <div class="market-updated" id="market-updated"></div>
+      <div class="market-grid" id="market-grid"></div>
+    </div>
+
+    <!-- 내 종목 -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">내 종목</span>
+        <span class="updated" id="updated-stocks"></span>
+      </div>
+      <div class="stock-grid" id="stock-grid"></div>
     </div>
 
     <div class="divider"></div>
@@ -216,51 +240,135 @@
   </div>
 
   <script>
+    // ── 시장 지수 ──────────────────────────────────────────────
     const INDICES = [
-      { id: 'kospi',  symbol: '%5EKS11',  label: 'KOSPI'   },
-      { id: 'kosdaq', symbol: '%5EKQ11',  label: 'KOSDAQ'  },
-      { id: 'sp500',  symbol: '%5EGSPC',  label: 'S&P 500' },
-      { id: 'nasdaq', symbol: '%5EIXIC',  label: 'NASDAQ'  },
+      { id: 'kospi',  symbol: '%5EKS11', label: 'KOSPI'   },
+      { id: 'kosdaq', symbol: '%5EKQ11', label: 'KOSDAQ'  },
+      { id: 'sp500',  symbol: '%5EGSPC', label: 'S&P 500' },
+      { id: 'nasdaq', symbol: '%5EIXIC', label: 'NASDAQ'  },
     ];
 
-    function fmt(n) {
-      if (n === null || n === undefined) return '—';
-      return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // ── 내 종목 (한국: 코드만, 미국: 티커) ─────────────────────
+    const MY_STOCKS = [
+      { code: '457480', kr: true  },
+      { code: '192820', kr: true  },
+      { code: '005930', kr: true  },
+      { code: 'AAPL',   kr: false },
+      { code: 'TSLL',   kr: false },
+      { code: 'NVDL',   kr: false },
+      { code: '005490', kr: true  },
+      { code: '367380', kr: true  },
+      { code: '360200', kr: true  },
+      { code: '458730', kr: true  },
+    ];
+
+    // ── 유틸 ───────────────────────────────────────────────────
+    function fmt(n, digits = 2) {
+      if (n == null) return '—';
+      return n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
     }
 
-    async function fetchOne(symbol) {
+    function nowTime() {
+      return new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    async function fetchQuote(symbol) {
       const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
       const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       const json = await res.json();
-      const meta = json.chart.result[0].meta;
-      const price = meta.regularMarketPrice;
-      const prev  = meta.chartPreviousClose;
-      const diff  = price - prev;
-      const pct   = (diff / prev) * 100;
-      return { price, diff, pct };
+      const result = json.chart.result;
+      if (!result) throw new Error('no result');
+      const meta = result[0].meta;
+      return {
+        name:  meta.shortName || meta.symbol,
+        price: meta.regularMarketPrice,
+        prev:  meta.chartPreviousClose,
+      };
+    }
+
+    function changeClass(diff) {
+      return diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+    }
+
+    // ── 지수 카드 렌더 ─────────────────────────────────────────
+    function renderMarketCards() {
+      const grid = document.getElementById('market-grid');
+      grid.innerHTML = INDICES.map(({ id, label }) => `
+        <div class="card">
+          <span class="card-name">${label}</span>
+          <span class="card-value loading" id="mv-${id}">···</span>
+          <span class="card-change" id="mc-${id}"></span>
+        </div>`).join('');
     }
 
     async function loadMarket() {
       await Promise.all(INDICES.map(async ({ id, symbol }) => {
         try {
-          const { price, diff, pct } = await fetchOne(symbol);
-          document.getElementById(`v-${id}`).textContent = fmt(price);
-          document.getElementById(`v-${id}`).classList.remove('market-loading');
+          const { price, prev } = await fetchQuote(symbol);
+          const diff = price - prev;
+          const pct  = diff / prev * 100;
           const sign = diff >= 0 ? '+' : '';
-          const cls  = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
-          document.getElementById(`c-${id}`).textContent = `${sign}${fmt(diff)} (${sign}${pct.toFixed(2)}%)`;
-          document.getElementById(`c-${id}`).className = `market-change ${cls}`;
+          document.getElementById(`mv-${id}`).textContent = fmt(price);
+          document.getElementById(`mv-${id}`).classList.remove('loading');
+          document.getElementById(`mc-${id}`).textContent = `${sign}${fmt(diff)} (${sign}${pct.toFixed(2)}%)`;
+          document.getElementById(`mc-${id}`).className = `card-change ${changeClass(diff)}`;
         } catch {
-          document.getElementById(`v-${id}`).textContent = '—';
+          document.getElementById(`mv-${id}`).textContent = '—';
         }
       }));
-      const now = new Date();
-      document.getElementById('market-updated').textContent =
-        `updated ${now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}`;
+      document.getElementById('updated-market').textContent = nowTime() + ' 기준';
     }
 
+    // ── 종목 카드 렌더 ─────────────────────────────────────────
+    function renderStockCards() {
+      const grid = document.getElementById('stock-grid');
+      grid.innerHTML = MY_STOCKS.map(({ code }) => `
+        <div class="card">
+          <span class="card-name loading" id="sn-${code}">···</span>
+          <span class="card-ticker">${code}</span>
+          <span class="card-value loading" id="sv-${code}">···</span>
+          <span class="card-change" id="sc-${code}"></span>
+        </div>`).join('');
+    }
+
+    async function loadStock({ code, kr }) {
+      // 한국 주식: .KS 먼저 시도, 실패 시 .KQ
+      const symbols = kr ? [`${code}.KS`, `${code}.KQ`] : [code];
+      let data = null;
+      for (const sym of symbols) {
+        try { data = await fetchQuote(sym); break; } catch {}
+      }
+      if (!data) {
+        document.getElementById(`sn-${code}`).textContent = code;
+        document.getElementById(`sv-${code}`).textContent = '—';
+        return;
+      }
+      const { name, price, prev } = data;
+      const diff = price - prev;
+      const pct  = diff / prev * 100;
+      const sign = diff >= 0 ? '+' : '';
+      const digits = price >= 100 ? 0 : 2;
+
+      document.getElementById(`sn-${code}`).textContent = name;
+      document.getElementById(`sn-${code}`).classList.remove('loading');
+      document.getElementById(`sv-${code}`).textContent = fmt(price, digits);
+      document.getElementById(`sv-${code}`).classList.remove('loading');
+      document.getElementById(`sc-${code}`).textContent = `${sign}${pct.toFixed(2)}%`;
+      document.getElementById(`sc-${code}`).className = `card-change ${changeClass(diff)}`;
+    }
+
+    async function loadStocks() {
+      await Promise.all(MY_STOCKS.map(loadStock));
+      document.getElementById('updated-stocks').textContent = nowTime() + ' 기준';
+    }
+
+    // ── 초기화 & 주기 갱신 ────────────────────────────────────
+    renderMarketCards();
+    renderStockCards();
     loadMarket();
-    setInterval(loadMarket, 60000); // 1분마다 갱신
+    loadStocks();
+    setInterval(() => { loadMarket(); loadStocks(); }, 60000);
   </script>
 </body>
 </html>
