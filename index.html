@@ -25,7 +25,6 @@
       padding: 48px 28px;
     }
 
-    /* ── 검색 행 ── */
     .search-row {
       display: flex;
       align-items: center;
@@ -88,19 +87,16 @@
 
     button:hover { color: #555; }
 
-    /* ── 구분선 ── */
     .divider {
       height: 1px;
       background: #e2e5e9;
       margin: 4px 0;
     }
 
-    /* ── 섹션 ── */
     .section {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding-left: 50px;
     }
 
     .section-header {
@@ -122,20 +118,12 @@
       color: #ced4da;
     }
 
-    /* ── 그리드 ── */
     .market-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
 
-    .stock-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-    }
-
-    /* ── 카드 ── */
     .card {
       background: #fff;
       border: 1px solid #e8eaed;
@@ -152,6 +140,11 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
+    .card-link {
+      text-decoration: none;
+      cursor: pointer;
+    }
+
     .card-name {
       font-size: 10px;
       color: #868e96;
@@ -159,11 +152,6 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .card-ticker {
-      font-size: 9px;
-      color: #ced4da;
     }
 
     .card-value {
@@ -188,59 +176,50 @@
     .down    { color: #1971c2; }
     .flat    { color: #868e96; }
 
-    /* ── 바로가기 ── */
-    .shortcuts {
-      display: flex;
-      gap: 8px;
-      padding-left: 50px;
-    }
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 480px) {
+      .container {
+        padding: 24px 16px;
+        gap: 14px;
+      }
 
-    .shortcut {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 8px 14px 8px 8px;
-      background: #fff;
-      border: 1px solid #e8eaed;
-      border-radius: 10px;
-      text-decoration: none;
-      color: #495057;
-      font-size: 13px;
-      font-weight: 500;
-      transition: box-shadow 0.15s, border-color 0.15s;
-    }
+      .market-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
 
-    .shortcut:hover {
-      border-color: #adb5bd;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+      .card {
+        padding: 9px 10px;
+      }
 
-    .shortcut-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 800;
+      .card-value {
+        font-size: 12px;
+      }
+
+      .card-change {
+        font-size: 9px;
+      }
+
+      .card-name {
+        font-size: 9px;
+      }
+
+      .logo {
+        width: 34px;
+        height: 34px;
+      }
+
+      input {
+        font-size: 14px;
+        padding: 11px 14px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
 
-    <!-- 네이버 -->
-    <div class="search-row">
-      <div class="logo logo-naver">N</div>
-      <form action="https://search.naver.com/search.naver" method="get" target="_blank">
-        <input name="query" type="text" placeholder="네이버 검색" autofocus>
-        <button type="submit">↵</button>
-      </form>
-    </div>
-
-    <!-- 시장 지수 -->
+    <!-- 1. 지수 가장 위 -->
     <div class="section">
       <div class="section-header">
         <span class="section-label">Market</span>
@@ -249,18 +228,16 @@
       <div class="market-grid" id="market-grid"></div>
     </div>
 
-    <!-- 내 종목 -->
-    <div class="section">
-      <div class="section-header">
-        <span class="section-label">내 종목</span>
-        <span class="updated" id="updated-stocks"></span>
-      </div>
-      <div class="stock-grid" id="stock-grid"></div>
-    </div>
-
     <div class="divider"></div>
 
-    <!-- 유튜브 -->
+    <div class="search-row">
+      <div class="logo logo-naver">N</div>
+      <form action="https://search.naver.com/search.naver" method="get" target="_blank">
+        <input name="query" type="text" placeholder="네이버 검색" autofocus>
+        <button type="submit">↵</button>
+      </form>
+    </div>
+
     <div class="search-row">
       <div class="logo logo-youtube">▶</div>
       <form action="https://www.youtube.com/results" method="get" target="_blank">
@@ -269,27 +246,12 @@
       </form>
     </div>
 
-    <!-- 구글 -->
     <div class="search-row">
       <div class="logo logo-google">G</div>
       <form action="https://www.google.com/search" method="get" target="_blank">
         <input name="q" type="text" placeholder="Google 검색">
         <button type="submit">↵</button>
       </form>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- 바로가기 -->
-    <div class="shortcuts">
-      <a href="https://stock.naver.com/watchlist/home" target="_blank" class="shortcut">
-        <span class="shortcut-icon" style="background:#03c75a;">N</span>
-        네이버 관심종목
-      </a>
-      <a href="https://stock.naver.com" target="_blank" class="shortcut">
-        <span class="shortcut-icon" style="background:#03c75a;">N</span>
-        네이버 증권
-      </a>
     </div>
 
   </div>
@@ -300,19 +262,7 @@
       { id: 'kosdaq', symbol: '%5EKQ11', label: 'KOSDAQ'  },
       { id: 'sp500',  symbol: '%5EGSPC', label: 'S&P 500' },
       { id: 'nasdaq', symbol: '%5EIXIC', label: 'NASDAQ'  },
-    ];
-
-    const MY_STOCKS = [
-      { code: '457480', kr: true  },
-      { code: '192820', kr: true  },
-      { code: '005930', kr: true  },
-      { code: 'AAPL',   kr: false },
-      { code: 'TSLL',   kr: false },
-      { code: 'NVDL',   kr: false },
-      { code: '005490', kr: true  },
-      { code: '367380', kr: true  },
-      { code: '360200', kr: true  },
-      { code: '458730', kr: true  },
+      { id: 'usdkrw', symbol: 'KRW=X',  label: 'USD/KRW' },
     ];
 
     function fmt(n, digits = 2) {
@@ -330,12 +280,10 @@
 
       let json;
       try {
-        // 직접 시도
         const res = await fetch(target);
         if (!res.ok) throw new Error();
         json = await res.json();
       } catch {
-        // CORS 프록시 경유
         const res = await fetch(proxy);
         if (!res.ok) throw new Error('proxy failed');
         json = await res.json();
@@ -353,14 +301,22 @@
 
     function cls(diff) { return diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat'; }
 
-    // ── 지수 카드
     function renderMarketCards() {
-      document.getElementById('market-grid').innerHTML = INDICES.map(({ id, label }) => `
+      const cards = INDICES.map(({ id, label }) => `
         <div class="card">
           <span class="card-name">${label}</span>
           <span class="card-value loading" id="mv-${id}">···</span>
           <span class="card-change loading" id="mc-${id}">···</span>
         </div>`).join('');
+
+      const linkCard = `
+        <a href="https://stock.naver.com" target="_blank" class="card card-link">
+          <span class="card-name">네이버 증권</span>
+          <span class="card-value" style="color:#03c75a;">N</span>
+          <span class="card-change" style="color:#868e96;">바로가기 →</span>
+        </a>`;
+
+      document.getElementById('market-grid').innerHTML = cards + linkCard;
     }
 
     async function loadMarket() {
@@ -380,51 +336,9 @@
       document.getElementById('updated-market').textContent = nowTime() + ' 기준';
     }
 
-    // ── 종목 카드
-    function renderStockCards() {
-      document.getElementById('stock-grid').innerHTML = MY_STOCKS.map(({ code }) => `
-        <div class="card">
-          <span class="card-name loading" id="sn-${code}">···</span>
-          <span class="card-ticker">${code}</span>
-          <span class="card-value loading" id="sv-${code}">···</span>
-          <span class="card-change loading" id="sc-${code}">···</span>
-        </div>`).join('');
-    }
-
-    async function loadStock({ code, kr }) {
-      const symbols = kr ? [`${code}.KS`, `${code}.KQ`] : [code];
-      let data = null;
-      for (const sym of symbols) {
-        try { data = await fetchQuote(sym); break; } catch {}
-      }
-      if (!data) {
-        document.getElementById(`sn-${code}`).textContent = code;
-        document.getElementById(`sv-${code}`).textContent = '—';
-        document.getElementById(`sc-${code}`).textContent = '';
-        return;
-      }
-      const { name, price, prev } = data;
-      const diff = price - prev, pct = diff / prev * 100, sign = diff >= 0 ? '+' : '';
-      const digits = price >= 1000 ? 0 : price >= 10 ? 2 : 3;
-
-      document.getElementById(`sn-${code}`).textContent = name;
-      document.getElementById(`sn-${code}`).className = 'card-name';
-      document.getElementById(`sv-${code}`).textContent = fmt(price, digits);
-      document.getElementById(`sv-${code}`).className = 'card-value';
-      document.getElementById(`sc-${code}`).textContent = `${sign}${pct.toFixed(2)}%`;
-      document.getElementById(`sc-${code}`).className = `card-change ${cls(diff)}`;
-    }
-
-    async function loadStocks() {
-      await Promise.all(MY_STOCKS.map(loadStock));
-      document.getElementById('updated-stocks').textContent = nowTime() + ' 기준';
-    }
-
     renderMarketCards();
-    renderStockCards();
     loadMarket();
-    loadStocks();
-    setInterval(() => { loadMarket(); loadStocks(); }, 60000);
+    setInterval(() => { loadMarket(); }, 60000);
   </script>
 </body>
 </html>
